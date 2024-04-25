@@ -3,6 +3,7 @@ from flask_restx import Api, Resource, fields, reqparse
 import joblib
 from flask_cors import CORS
 
+
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes and origins
 
@@ -85,8 +86,8 @@ def prediction(year, mileage, state, make, model):
         'State': [state],
         'Make': [make],
         'Model': [model]}
-    
-    prediction = cars_pipeline.predict(pd.DataFrame(dict_))
+    reg = joblib.load(os.path.dirname(__file__) + '/carpricing_reg.pkl') 
+    prediction = reg.cars_pipeline.predict(pd.DataFrame(dict_))
     
     return (prediction[0]).astype(int)
 
