@@ -100,8 +100,8 @@ def prediction(year, mileage, state, make, model):
         'State': [state],
         'Make': [make],
         'Model': [model]}
-    reg = joblib.load(os.path.dirname(__file__) + '/carpricing_reg.pkl') 
-    prediction = reg.cars_pipeline.predict(pd.DataFrame(dict_))
+    cars_pipeline = joblib.load(os.path.dirname(__file__) + '/carpricing_reg.pkl') 
+    prediction = cars_pipeline.predict(pd.DataFrame(dict_))
     
     return (prediction[0]).astype(int)
 
