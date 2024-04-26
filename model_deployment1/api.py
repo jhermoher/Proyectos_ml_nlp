@@ -73,7 +73,7 @@ models = ['Wrangler', 'Tahoe4WD', 'X5AWD', 'SRXLuxury', '3', 'C-ClassC300','Camr
 
 api = Api(
     app, 
-    version='0.0a', 
+    version='0.0b', 
     title='Pre-own Car Price Prediction API',
     description='API for prediction of pre-own cars in USA. Developed by Team 8.')
 
@@ -131,4 +131,4 @@ class CarPricingApi(Resource):
         }, 200
     
 if __name__ == '__main__':
-    app.run(debug=True, use_reloader=False, host='0.0.0.0', port=5050)
+    app.run(debug=True, use_reloader=False, host='0.0.0.0', port=5000)
