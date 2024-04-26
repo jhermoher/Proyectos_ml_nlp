@@ -39,6 +39,6 @@ def prediction(year, mileage, state, make, model):
     return (f'Pre-owned car price prediction is: {car_prediction[0].astype(int):,.0f}')
 
 if __name__ == "__main__":
-   print(prediction(2015, 50000, ' FL', 'Jeep', 'Wrangler')
+   print(prediction(2015, 50000, ' FL', 'Jeep', 'Wrangler'))
 
 
