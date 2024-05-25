@@ -143,7 +143,6 @@ contractions_dict = {
 }
 contractions_re = re.compile(r'\b(?:%s)\b' % '|'.join(re.escape(key) for key in contractions_dict.keys()))
 
-
 def decontracter(text, contractions_dict=contractions_dict):
     def replace(match):
         return contractions_dict[match.group(0)]
@@ -161,7 +160,6 @@ def lemma_nlp(text):
 	lemmatized_plot= " ".join([token.lemma_ for token in doc])
 	return lemmatized_plot
 
-# Pre-procesamiento de datos de entrenamiento
 def lemmatizer(text):
     stop_words = set(stopwords.words('english'))
     words = text.split()
@@ -175,6 +173,8 @@ def preprocess_text(texts):
     texts = [cleaning_plot(text) for text in texts]
     texts = [lemma_nlp(text) for text in texts]
     return texts
+
+text_preprocessor = FunctionTransformer(preprocess_text, validate=False)
 
 def predictions(text):
     '''
