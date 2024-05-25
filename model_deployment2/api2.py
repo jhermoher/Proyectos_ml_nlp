@@ -7,9 +7,7 @@ import os
 from team08_model_prediction2 import predictions
 
 app = Flask(__name__)
-CORS(app)  
-
-app = Flask(__name__)
+CORS(app) 
 
 api = Api(
     app, 
