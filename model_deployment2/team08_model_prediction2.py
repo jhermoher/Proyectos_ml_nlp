@@ -144,16 +144,16 @@ contractions_dict = {
 contractions_re = re.compile(r'\b(?:%s)\b' % '|'.join(re.escape(key) for key in contractions_dict.keys()))
 
 def decontracter(text, contractions_dict=contractions_dict):
-    def replace(match):
-        return contractions_dict[match.group(0)]
-    return contractions_re.sub(replace, text)
+	def replace(match):
+		return contractions_dict[match.group(0)]
+	return contractions_re.sub(replace, text)
 
 def cleaning_plot(text):
-    text = decontracter(text)
-    text = re.sub(r"\'", "", text)
-    text = re.sub(r"[^a-zA-Z]"," ",text)
-    text = ' '.join(text.lower().split())
-    return text
+	text = decontracter(text)
+	text = re.sub(r"\'", "", text)
+	text = re.sub(r"[^a-zA-Z]"," ",text)
+	text = ' '.join(text.lower().split())
+	return text
 
 def lemma_nlp(text):
 	doc = nlp(text)
@@ -161,34 +161,31 @@ def lemma_nlp(text):
 	return lemmatized_plot
 
 def lemmatizer(text):
-    stop_words = set(stopwords.words('english'))
-    words = text.split()
-    words = [word for word in words if len(word) > 1 and word not in stop_words]
-    clean_text = ' '.join(words)
-    lemmatized_text = lemma_nlp(clean_text)
-    return lemmatized_text
+	stop_words = set(stopwords.words('english'))
+	words = text.split()
+	words = [word for word in words if len(word) > 1 and word not in stop_words]
+	clean_text = ' '.join(words)
+	lemmatized_text = lemma_nlp(clean_text)
+	return lemmatized_text
 
 def preprocess_text(texts):
-    texts = [decontracter(text, contractions_dict) for text in texts]
-    texts = [cleaning_plot(text) for text in texts]
-    texts = [lemmatizer(text) for text in texts]
-    return texts
+	texts = [decontracter(text, contractions_dict) for text in texts]
+	texts = [cleaning_plot(text) for text in texts]
+	texts = [lemmatizer(text) for text in texts]
+	return texts
 
 text_preprocessor = FunctionTransformer(preprocess_text, validate=False)
 
 model_genre_clf = joblib.load(os.path.dirname(__file__) + '/model_genre_clf.pkl')
 
 def predictions(text):
-    '''
-    '''
-    dict_ = {'plot': [text]}
-    datatesting_ =  pd.DataFrame(dict_)
-    
-    genre_prediction = model_genre_clf.predict(datatesting_['plot'])
-    
-    return (f'The predicted movies genres are: {le.inverse_transform(genre_prediction)}')
+	dict_ = {'plot': [text]}
+	datatesting_ =  pd.DataFrame(dict_)
+	genre_prediction = model_genre_clf.predict(datatesting_['plot'])
+	return (f'The predicted movies genres are: {le.inverse_transform(genre_prediction)}')
 
 if __name__ == "__main__":
-   print(predictions('Comedy','Drama'))
+	plot = 'A hilarious comedy about a group of friends'
+	print(predictions(plot))
 
 
