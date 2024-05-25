@@ -174,13 +174,11 @@ def preprocess_text(texts):
     texts = [lemma_nlp(text) for text in texts]
     return texts
 
-text_preprocessor = FunctionTransformer(preprocess_text, validate=False)
+model_genre_clf = joblib.load(os.path.dirname(__file__) + '/model_genre_clf.pkl')
 
 def predictions(text):
     '''
     '''
-    model_genre_clf = joblib.load(os.path.dirname(__file__) + '/model_genre_clf.pkl')
-    
     dict_ = {'plot': [text]}
     datatesting_ =  pd.DataFrame(dict_)
     
