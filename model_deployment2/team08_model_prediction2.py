@@ -179,7 +179,6 @@ text_preprocessor = FunctionTransformer(preprocess_text, validate=False)
 def predictions(text):
     '''
     '''
-    
     model_genre_clf = joblib.load(os.path.dirname(__file__) + '/model_genre_clf.pkl')
     
     dict_ = {'plot': [text]}
