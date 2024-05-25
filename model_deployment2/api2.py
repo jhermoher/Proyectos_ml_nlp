@@ -40,4 +40,4 @@ class Predict(Resource):
         return {'result': result}, 200
     
 if __name__ == '__main__':
-    app.run(debug=True, use_reloader=False, host='0.0.0.0', port=5050)
+    app.run(debug=True, use_reloader=False, host='0.0.0.0', port=5000)
