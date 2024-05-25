@@ -171,7 +171,7 @@ def lemmatizer(text):
 def preprocess_text(texts):
     texts = [decontracter(text, contractions_dict) for text in texts]
     texts = [cleaning_plot(text) for text in texts]
-    texts = [lemma_nlp(text) for text in texts]
+    texts = [lemmatizer(text) for text in texts]
     return texts
 
 text_preprocessor = FunctionTransformer(preprocess_text, validate=False)
