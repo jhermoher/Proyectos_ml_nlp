@@ -142,60 +142,52 @@ contractions_dict = {
 }
 contractions_re = re.compile(r'\b(?:%s)\b' % '|'.join(re.escape(key) for key in contractions_dict.keys()))
 
-class Decontracter(BaseEstimator, TransformerMixin):
-    def fit(self, X, y=None):
-        return self
-    
-    def transform(self, X):
-        return [self.decontract(text) for text in X]
-    
-    def decontract(self, text):
-        def replace(match):
-            return contractions_dict[match.group(0)]
-        return contractions_re.sub(replace, text)
-
-class CleaningPlot(BaseEstimator, TransformerMixin):
-    def fit(self, X, y=None):
-        return self
-    
-    def transform(self, X):
-        return [self.clean(text) for text in X]
-    
-    def clean(self, text):
-        text = Decontracter().decontract(text)
-        text = re.sub(r"\'", "", text)
-        text = re.sub(r"[^a-zA-Z]", " ", text)
-        text = ' '.join(text.lower().split())
-        return text
-
-class Lemmatizer_nlp(BaseEstimator, TransformerMixin):
-    def fit(self, X, y=None):
-        return self
-    
-    def transform(self, X):
-        return [self.lemmatize(text) for text in X]
-    
-    def lemmatize(self, text):
-        doc = nlp(text)
-        lemmatized_plot = " ".join([token.lemma_ for token in doc])
-        return lemmatized_plot
-
-class Lemmatizer(BaseEstimator, TransformerMixin):
-    def fit(self, X, y=None):
-        return self
-    
-    def transform(self, X):
-        return [self.final_lemmatize(text) for text in X]
-    
-    def final_lemmatize(self, text):
-        stop_words = set(stopwords.words('english'))
-        words = text.split()
-        words = [word for word in words if len(word) > 1 and word not in stop_words]
-        clean_text = ' '.join(words)
-        lemmatized_text = Lemmatizer_nlp().lemmatize(clean_text)
-        return lemmatized_text
-
 def predictions(text):
+	class Decontracter(BaseEstimator, TransformerMixin):
+		def fit(self, X, y=None):
+			return self
+	    	def transform(self, X):
+	       		return [self.decontract(text) for text in X]
+		def decontract(self, text):
+			def replace(match):
+				return contractions_dict[match.group(0)]
+			return contractions_re.sub(replace, text)
+	
+	class CleaningPlot(BaseEstimator, TransformerMixin):
+		def fit(self, X, y=None):
+			return self
+		def transform(self, X):
+	        	return [self.clean(text) for text in X]
+	    	def clean(self, text):
+		        text = Decontracter().decontract(text)
+		        text = re.sub(r"\'", "", text)
+		        text = re.sub(r"[^a-zA-Z]", " ", text)
+		        text = ' '.join(text.lower().split())
+		        return text
+	
+	class Lemmatizer_nlp(BaseEstimator, TransformerMixin):
+		def fit(self, X, y=None):
+			return self
+		def transform(self, X):
+		        return [self.lemmatize(text) for text in X]
+		def lemmatize(self, text):
+		        doc = nlp(text)
+		        lemmatized_plot = " ".join([token.lemma_ for token in doc])
+		        return lemmatized_plot
+			
+	class Lemmatizer(BaseEstimator, TransformerMixin):
+	    	def fit(self, X, y=None):
+	        	return self
+		def transform(self, X):
+	        	return [self.final_lemmatize(text) for text in X]
+	    def final_lemmatize(self, text):
+		        stop_words = set(stopwords.words('english'))
+		        words = text.split()
+		        words = [word for word in words if len(word) > 1 and word not in stop_words]
+		        clean_text = ' '.join(words)
+		        lemmatized_text = Lemmatizer_nlp().lemmatize(clean_text)
+		        return lemmatized_text
+		    
 	model_genre_clf = joblib.load(os.path.dirname(__file__) + '/model_genre_clf.pkl')
 	
 	dict_ = {'plot': [text]}
