@@ -5,6 +5,7 @@ import numpy as np
 import re
 import nltk
 import spacy
+import pickle
 
 from nltk.corpus import stopwords
 
@@ -25,6 +26,7 @@ from pre_processing import CleaningPlot, Lemmatizer
 
 def predictions(text):	    
 	model_genre_clf = joblib.load(os.path.dirname(__file__) + '/model_genre_clf_1.pkl')
+	model_genre_clf.classes_ = joblib.load(os.path.dirname(__file__) + '/model_genre_clf_1_classes_.pkl')
 	le = joblib.load(os.path.dirname(__file__) + 'label_encoder.pkl')
 	
 	cleaning_plot = CleaningPlot()
