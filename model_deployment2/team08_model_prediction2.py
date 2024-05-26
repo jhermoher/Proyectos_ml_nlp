@@ -14,7 +14,7 @@ from sklearn.decomposition import LatentDirichletAllocation
 from sklearn.linear_model import SGDClassifier
 
 from sklearn.pipeline import Pipeline, FeatureUnion
-from sklearn.preprocessing import FunctionTransformer
+from sklearn.base import BaseEstimator, TransformerMixin
 
 nlp = spacy.load("en_core_web_sm")
 
@@ -142,40 +142,58 @@ contractions_dict = {
 }
 contractions_re = re.compile(r'\b(?:%s)\b' % '|'.join(re.escape(key) for key in contractions_dict.keys()))
 
+class Decontracter(BaseEstimator, TransformerMixin):
+    def fit(self, X, y=None):
+        return self
+    
+    def transform(self, X):
+        return [self.decontract(text) for text in X]
+    
+    def decontract(self, text):
+        def replace(match):
+            return contractions_dict[match.group(0)]
+        return contractions_re.sub(replace, text)
 
-def decontracter(text, contractions_dict=contractions_dict):
-	def replace(match):
-		return contractions_dict[match.group(0)]
-	return contractions_re.sub(replace, text)
+class CleaningPlot(BaseEstimator, TransformerMixin):
+    def fit(self, X, y=None):
+        return self
+    
+    def transform(self, X):
+        return [self.clean(text) for text in X]
+    
+    def clean(self, text):
+        text = Decontracter().decontract(text)
+        text = re.sub(r"\'", "", text)
+        text = re.sub(r"[^a-zA-Z]", " ", text)
+        text = ' '.join(text.lower().split())
+        return text
 
-def cleaning_plot(text):
-	text = decontracter(text)
-	text = re.sub(r"\'", "", text)
-	text = re.sub(r"[^a-zA-Z]"," ",text)
-	text = ' '.join(text.lower().split())
-	return text
-	
-def lemma_nlp(text):
-	doc = nlp(text)
-	lemmatized_plot= " ".join([token.lemma_ for token in doc])
-	return lemmatized_plot
-	
-def lemmatizer(text):
-	stop_words = set(stopwords.words('english'))
-	words = text.split()
-	words = [word for word in words if len(word) > 1 and word not in stop_words]
-	clean_text = ' '.join(words)
-	lemmatized_text = lemma_nlp(clean_text)
-	return lemmatized_text
+class Lemmatizer_nlp(BaseEstimator, TransformerMixin):
+    def fit(self, X, y=None):
+        return self
+    
+    def transform(self, X):
+        return [self.lemmatize(text) for text in X]
+    
+    def lemmatize(self, text):
+        doc = nlp(text)
+        lemmatized_plot = " ".join([token.lemma_ for token in doc])
+        return lemmatized_plot
 
-def decontracter_transformer(texts):
-    return [decontracter(text) for text in texts]
-
-def cleaning_plot_transformer(texts):
-    return [cleaning_plot(text) for text in texts]
-
-def lemmatizer_transformer(texts):
-    return [lemmatizer(text) for text in texts]
+class Lemmatizer(BaseEstimator, TransformerMixin):
+    def fit(self, X, y=None):
+        return self
+    
+    def transform(self, X):
+        return [self.final_lemmatize(text) for text in X]
+    
+    def final_lemmatize(self, text):
+        stop_words = set(stopwords.words('english'))
+        words = text.split()
+        words = [word for word in words if len(word) > 1 and word not in stop_words]
+        clean_text = ' '.join(words)
+        lemmatized_text = Lemmatizer_nlp().lemmatize(clean_text)
+        return lemmatized_text
 
 def predictions(text):
 	model_genre_clf = joblib.load(os.path.dirname(__file__) + '/model_genre_clf.pkl')
