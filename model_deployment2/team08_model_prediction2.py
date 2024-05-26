@@ -21,7 +21,7 @@ nlp = spacy.load("en_core_web_sm")
 import joblib
 import os
 
-from pre-processing import Decontracter, CleaningPlot, Lemmatizer
+from pre_processing import Decontracter, CleaningPlot, Lemmatizer
 
 def predictions(text):	    
 	model_genre_clf = joblib.load(os.path.dirname(__file__) + '/model_genre_clf_1.pkl')
