@@ -22,7 +22,6 @@ import joblib
 import os
 
 class Decontracter(BaseEstimator, TransformerMixin):
-
     contractions_dict = {
         "ain ' t": "am not",
         "aren ' t": "are not",
@@ -200,6 +199,7 @@ def predictions(text):
 	model_genre_clf = joblib.load(os.path.dirname(__file__) + '/model_genre_clf_1.pkl')
 	le = joblib.load(os.path.dirname(__file__) + 'label_encoder.pkl')
 	
+	decontracter = Decontracter()
 	cleaning_plot = CleaningPlot()
 	lemmatizer = Lemmatizer()
 	cleaned_text = cleaning_plot.transform([text])
