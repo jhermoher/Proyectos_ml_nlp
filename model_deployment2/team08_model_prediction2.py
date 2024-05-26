@@ -142,6 +142,7 @@ def predictions(text):
 	    "you ' ve": "you have"
 	}
 	contractions_re = re.compile(r'\b(?:%s)\b' % '|'.join(re.escape(key) for key in contractions_dict.keys()))
+
 	class Decontracter(BaseEstimator, TransformerMixin):
 	    def fit(self, X, y=None):
 	        return self
@@ -196,6 +197,7 @@ def predictions(text):
 	        return lemmatized_text
 			    
 	model_genre_clf = joblib.load(os.path.dirname(__file__) + '/model_genre_clf.pkl')
+	le = joblib.load('label_encoder.pkl')
 	
 	dict_ = {'plot': [text]}
 	datatesting_ =  pd.DataFrame(dict_)
