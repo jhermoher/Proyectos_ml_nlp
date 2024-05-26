@@ -7,11 +7,7 @@ import os
 from team08_model_prediction2 import predictions
 
 app = Flask(__name__)
-CORS(app) 
-
-model_genre_clf = joblib.load(os.path.join(os.path.dirname(__file__), 'model_genre_clf_1.pkl'))
-model_genre_clf.classes_ = joblib.load(os.path.join(os.path.dirname(__file__), 'model_genre_clf_1_classes_.pkl'))
-le = joblib.load(os.path.join(os.path.dirname(__file__), 'label_encoder.pkl'))
+CORS(app)
 
 api = Api(
     app, 
