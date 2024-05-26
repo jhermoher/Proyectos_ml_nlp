@@ -132,8 +132,8 @@ class Decontracter(BaseEstimator, TransformerMixin):
 	        "you ' ll ' ve": "you will have",
 	        "you ' re": "you are",
 	        "you ' ve": "you have"
-    }
-    contractions_re = re.compile(r'\b(?:%s)\b' % '|'.join(re.escape(key) for key in contractions_dict.keys()))
+	}
+    	contractions_re = re.compile(r'\b(?:%s)\b' % '|'.join(re.escape(key) for key in contractions_dict.keys()))
     def __init__(self):
         pattern = r'\b(?:%s)\b' % '|'.join(re.escape(key) for key in self.contractions_dict.keys())
         self.contractions_re = re.compile(pattern)
